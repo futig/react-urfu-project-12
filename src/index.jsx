@@ -11,7 +11,6 @@ if (sentryDsn) {
     dsn: sentryDsn,
     environment: import.meta.env.MODE,
   });
-  Sentry.captureException(new Error('Hexlet Chat: Bugsink test'));
 }
 
 const app = async () => {
