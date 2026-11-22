@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import App from './App.jsx';
+import { addMessageToCache } from './utils/queryCache.js';
 
 const init = async (socket) => {
   if (!socket) {
@@ -8,6 +9,10 @@ const init = async (socket) => {
   }
 
   const queryClient = new QueryClient();
+
+  socket.on('newMessage', (message) => {
+    addMessageToCache(queryClient, message);
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

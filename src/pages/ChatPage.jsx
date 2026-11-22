@@ -17,6 +17,7 @@ import MessagesList from '../components/chat/MessagesList.jsx';
 import NewMessageForm from '../components/chat/NewMessageForm.jsx';
 import useAuthStore from '../store/authStore.js';
 import useChatUiStore from '../store/chatUiStore.js';
+import { MESSAGES_QUERY_KEY } from '../utils/queryCache.js';
 
 const ChatPage = () => {
   const token = useAuthStore((state) => state.token);
@@ -28,7 +29,7 @@ const ChatPage = () => {
     enabled: Boolean(token),
   });
   const messagesQuery = useQuery({
-    queryKey: ['messages'],
+    queryKey: MESSAGES_QUERY_KEY,
     queryFn: () => getMessages(token),
     enabled: Boolean(token),
   });
@@ -39,7 +40,8 @@ const ChatPage = () => {
     const channelExists = channels.some(({ id }) => id === currentChannelId);
 
     if (channels.length > 0 && !channelExists) {
-      setCurrentChannelId(channels[0].id);
+      const defaultChannel = channels.find(({ name }) => name === 'general') ?? channels[0];
+      setCurrentChannelId(defaultChannel.id);
     }
   }, [channels, currentChannelId, setCurrentChannelId]);
 
