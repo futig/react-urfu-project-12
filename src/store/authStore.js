@@ -1,13 +1,19 @@
-import { create } from 'zustand';
+import { createContext, useContext } from 'react';
+import { createStore, useStore } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-const useAuthStore = create(
+export const AuthStoreContext = createContext(null);
+
+export const createAuthStore = () => createStore(
   persist(
-    (set) => ({
+    (set, get, api) => ({
       token: null,
       username: null,
       login: ({ token, username }) => set({ token, username }),
-      logout: () => set({ token: null, username: null }),
+      logout: () => {
+        set({ token: null, username: null });
+        api.persist.clearStorage();
+      },
     }),
     {
       name: 'auth',
@@ -15,5 +21,15 @@ const useAuthStore = create(
     },
   ),
 );
+
+const useAuthStore = (selector) => {
+  const store = useContext(AuthStoreContext);
+
+  if (!store) {
+    throw new Error('useAuthStore must be used within AuthStoreContext.Provider');
+  }
+
+  return useStore(store, selector);
+};
 
 export default useAuthStore;

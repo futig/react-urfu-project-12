@@ -13,15 +13,15 @@ import {
 } from '@mantine/core';
 import { hasLength, isNotEmpty, matchesField, useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import useAuthStore from '../store/authStore.js';
-import { showErrorToast } from '../utils/toast.js';
 
 const SignupPage = () => {
   const [signupError, setSignupError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const token = useAuthStore((state) => state.token);
   const login = useAuthStore((state) => state.login);
   const { t } = useTranslation();
   const form = useForm({
@@ -32,23 +32,32 @@ const SignupPage = () => {
     },
     validateInputOnBlur: true,
     validate: {
-      username: hasLength(
-        { min: 3, max: 20 },
-        t(($) => $.signup.validation.usernameLength),
+      username: (value) => (
+        isNotEmpty(t(($) => $.errors.required))(value)
+        ?? hasLength(
+          { min: 3, max: 20 },
+          t(($) => $.signup.validation.usernameLength),
+        )(value)
       ),
-      password: hasLength(
-        { min: 6 },
-        t(($) => $.signup.validation.passwordLength),
+      password: (value) => (
+        isNotEmpty(t(($) => $.errors.required))(value)
+        ?? hasLength(
+          { min: 6 },
+          t(($) => $.signup.validation.passwordLength),
+        )(value)
       ),
       confirmPassword: (value, values) => (
-        isNotEmpty(t(($) => $.signup.validation.confirmRequired))(value)
-        ?? matchesField(
+        matchesField(
           'password',
           t(($) => $.signup.validation.passwordsMismatch),
         )(value, values)
       ),
     },
   });
+
+  if (token) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async ({ username, password }) => {
     setSignupError(null);
@@ -74,9 +83,9 @@ const SignupPage = () => {
       const userData = await response.json();
       login(userData);
       navigate('/', { replace: true });
-    } catch {
+    } catch (error) {
+      console.error('Ошибка регистрации:', error);
       setSignupError('errors.network');
-      showErrorToast(t(($) => $.notifications.errorTitle), t(($) => $.errors.network));
     } finally {
       setIsSubmitting(false);
     }
@@ -87,6 +96,7 @@ const SignupPage = () => {
       <Paper
         component="form"
         onSubmit={form.onSubmit(handleSubmit)}
+        noValidate
         withBorder
         shadow="sm"
         radius="md"
@@ -104,11 +114,13 @@ const SignupPage = () => {
             </Alert>
           )}
           <TextInput
+            autoFocus
             label={t(($) => $.common.username)}
             placeholder={t(($) => $.signup.usernamePlaceholder)}
             name="username"
             autoComplete="username"
             required
+            withAsterisk={false}
             disabled={isSubmitting}
             {...form.getInputProps('username')}
           />
@@ -118,7 +130,9 @@ const SignupPage = () => {
             name="password"
             autoComplete="new-password"
             required
+            withAsterisk={false}
             disabled={isSubmitting}
+            visibilityToggleButtonProps={{ 'aria-label': t(($) => $.common.showPassword) }}
             {...form.getInputProps('password')}
           />
           <PasswordInput
@@ -127,7 +141,9 @@ const SignupPage = () => {
             name="confirmPassword"
             autoComplete="new-password"
             required
+            withAsterisk={false}
             disabled={isSubmitting}
+            visibilityToggleButtonProps={{ 'aria-label': t(($) => $.common.showPassword) }}
             {...form.getInputProps('confirmPassword')}
           />
           <Button type="submit" fullWidth loading={isSubmitting}>

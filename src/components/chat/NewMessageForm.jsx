@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Alert, Box, Button, Group, Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -16,6 +17,7 @@ const NewMessageForm = () => {
   const currentChannelId = useChatUiStore((state) => state.currentChannelId);
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  const inputRef = useRef(null);
   const form = useForm({
     initialValues: {
       body: '',
@@ -24,6 +26,11 @@ const NewMessageForm = () => {
       body: (value) => (value.trim() ? null : t(($) => $.messages.required)),
     },
   });
+  useEffect(() => {
+    if (currentChannelId) {
+      inputRef.current?.focus();
+    }
+  }, [currentChannelId]);
   const mutation = useMutation({
     mutationFn: (body) => createMessage(token, {
       body,
@@ -33,10 +40,10 @@ const NewMessageForm = () => {
     onSuccess: (message) => {
       addMessageToCache(queryClient, message);
       form.reset();
+      inputRef.current?.focus();
     },
     onError: (error) => {
       showErrorToast(
-        t(($) => $.notifications.errorTitle),
         error instanceof TypeError
           ? t(($) => $.errors.network)
           : t(($) => $.notifications.messageSendError),
@@ -62,6 +69,7 @@ const NewMessageForm = () => {
         )}
         <Group wrap="nowrap" align="start">
           <TextInput
+            ref={inputRef}
             aria-label={t(($) => $.messages.label)}
             placeholder={t(($) => $.messages.placeholder)}
             name="body"

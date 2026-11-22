@@ -43,7 +43,7 @@ const ChatPage = () => {
   const messages = messagesQuery.data ?? [];
 
   useEffect(() => {
-    const channelExists = channels.some(({ id }) => id === currentChannelId);
+    const channelExists = channels.some(({ id }) => String(id) === String(currentChannelId));
 
     if (channels.length > 0 && !channelExists) {
       const defaultChannel = channels.find(({ name }) => name === 'general') ?? channels[0];
@@ -56,7 +56,6 @@ const ChatPage = () => {
   useEffect(() => {
     if (hasLoadError) {
       showErrorToast(
-        t(($) => $.notifications.errorTitle),
         t(($) => $.notifications.loadError),
         'chat-load-error',
       );
@@ -81,9 +80,9 @@ const ChatPage = () => {
     );
   }
 
-  const currentChannel = channels.find(({ id }) => id === currentChannelId) ?? channels[0];
+  const currentChannel = channels.find(({ id }) => String(id) === String(currentChannelId)) ?? channels[0];
   const currentMessages = currentChannel
-    ? messages.filter(({ channelId }) => channelId === currentChannel.id)
+    ? messages.filter(({ channelId }) => String(channelId) === String(currentChannel.id))
     : [];
   const currentChannelName = currentChannel
     ? `# ${currentChannel.name}`
@@ -99,10 +98,10 @@ const ChatPage = () => {
               <ActionIcon
                 type="button"
                 variant="light"
-                aria-label={t(($) => $.chat.addChannel)}
+                title={t(($) => $.chat.addChannel)}
                 onClick={() => openModal('add')}
               >
-                <span aria-hidden="true">+</span>
+                <span>+</span>
               </ActionIcon>
             </Group>
             <ScrollArea flex={1} mih={0}>

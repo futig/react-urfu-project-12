@@ -13,15 +13,15 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import useAuthStore from '../store/authStore.js';
-import { showErrorToast } from '../utils/toast.js';
 
 const LoginPage = () => {
   const [authError, setAuthError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const token = useAuthStore((state) => state.token);
   const login = useAuthStore((state) => state.login);
   const { t } = useTranslation();
   const form = useForm({
@@ -30,6 +30,10 @@ const LoginPage = () => {
       password: '',
     },
   });
+
+  if (token) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (values) => {
     setAuthError(null);
@@ -55,9 +59,9 @@ const LoginPage = () => {
       const userData = await response.json();
       login(userData);
       navigate('/', { replace: true });
-    } catch {
+    } catch (error) {
+      console.error('Ошибка входа:', error);
       setAuthError('errors.network');
-      showErrorToast(t(($) => $.notifications.errorTitle), t(($) => $.errors.network));
     } finally {
       setIsSubmitting(false);
     }
@@ -68,6 +72,7 @@ const LoginPage = () => {
       <Paper
         component="form"
         onSubmit={form.onSubmit(handleSubmit)}
+        noValidate
         withBorder
         shadow="sm"
         radius="md"
@@ -85,11 +90,13 @@ const LoginPage = () => {
             </Alert>
           )}
           <TextInput
-            label={t(($) => $.common.username)}
+            autoFocus
+            label={t(($) => $.login.usernameLabel)}
             placeholder={t(($) => $.login.usernamePlaceholder)}
             name="username"
             autoComplete="username"
             required
+            withAsterisk={false}
             disabled={isSubmitting}
             {...form.getInputProps('username')}
           />
@@ -99,7 +106,9 @@ const LoginPage = () => {
             name="password"
             autoComplete="current-password"
             required
+            withAsterisk={false}
             disabled={isSubmitting}
+            visibilityToggleButtonProps={{ 'aria-label': t(($) => $.common.showPassword) }}
             {...form.getInputProps('password')}
           />
           <Button type="submit" fullWidth loading={isSubmitting}>

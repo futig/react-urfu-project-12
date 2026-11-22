@@ -4,26 +4,24 @@ import { useTranslation } from 'react-i18next';
 
 import { deleteChannel } from '../../../api/chat.js';
 import useAuthStore from '../../../store/authStore.js';
+import { useChatUiStoreApi } from '../../../store/chatUiStore.js';
 import handleChannelRemoved from '../../../utils/channelRemoval.js';
 import { showErrorToast, showSuccessToast } from '../../../utils/toast.js';
 
 const RemoveChannelModal = ({ channel, opened, onClose }) => {
   const token = useAuthStore((state) => state.token);
   const queryClient = useQueryClient();
+  const chatUiStore = useChatUiStoreApi();
   const { t } = useTranslation();
   const mutation = useMutation({
     mutationFn: () => deleteChannel(token, channel.id),
     onSuccess: ({ id }) => {
-      handleChannelRemoved(queryClient, id);
-      showSuccessToast(
-        t(($) => $.notifications.successTitle),
-        t(($) => $.notifications.channelRemoved, { name: channel.name }),
-      );
+      handleChannelRemoved(queryClient, chatUiStore, id);
+      showSuccessToast(t(($) => $.notifications.channelRemoved));
       onClose();
     },
     onError: (error) => {
       showErrorToast(
-        t(($) => $.notifications.errorTitle),
         error instanceof TypeError
           ? t(($) => $.errors.network)
           : t(($) => $.notifications.channelRemoveError),
@@ -36,6 +34,7 @@ const RemoveChannelModal = ({ channel, opened, onClose }) => {
       opened={opened}
       onClose={onClose}
       title={t(($) => $.modals.remove.title)}
+      closeButtonProps={{ 'aria-label': t(($) => $.common.close) }}
       centered
       closeOnClickOutside={!mutation.isPending}
       closeOnEscape={!mutation.isPending}

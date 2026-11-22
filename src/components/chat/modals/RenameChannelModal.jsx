@@ -35,15 +35,11 @@ const RenameChannelModal = ({ channel, opened, onClose }) => {
     mutationFn: (name) => renameChannel(token, channel.id, name),
     onSuccess: (updatedChannel) => {
       upsertChannelInCache(queryClient, updatedChannel);
-      showSuccessToast(
-        t(($) => $.notifications.successTitle),
-        t(($) => $.notifications.channelRenamed, { name: updatedChannel.name }),
-      );
+      showSuccessToast(t(($) => $.notifications.channelRenamed));
       onClose();
     },
     onError: (error) => {
       showErrorToast(
-        t(($) => $.notifications.errorTitle),
         error instanceof TypeError
           ? t(($) => $.errors.network)
           : t(($) => $.notifications.channelRenameError),
@@ -60,6 +56,7 @@ const RenameChannelModal = ({ channel, opened, onClose }) => {
       opened={opened}
       onClose={onClose}
       title={t(($) => $.modals.rename.title)}
+      closeButtonProps={{ 'aria-label': t(($) => $.common.close) }}
       centered
       closeOnClickOutside={!mutation.isPending}
       closeOnEscape={!mutation.isPending}
@@ -75,6 +72,7 @@ const RenameChannelModal = ({ channel, opened, onClose }) => {
           <TextInput
             data-autofocus
             label={t(($) => $.modals.rename.label)}
+            placeholder={t(($) => $.modals.rename.placeholder)}
             name="name"
             disabled={mutation.isPending}
             {...form.getInputProps('name')}

@@ -3,15 +3,20 @@ import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import useAuthStore from '../store/authStore.js';
+import useChatUiStore from '../store/chatUiStore.js';
 
 const AppLayout = () => {
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
+  const setCurrentChannelId = useChatUiStore((state) => state.setCurrentChannelId);
+  const closeModal = useChatUiStore((state) => state.closeModal);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
+    setCurrentChannelId(null);
+    closeModal();
     navigate('/login', { replace: true });
   };
 

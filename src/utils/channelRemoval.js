@@ -1,10 +1,9 @@
-import useChatUiStore from '../store/chatUiStore.js';
 import { CHANNELS_QUERY_KEY, removeChannelFromCache } from './queryCache.js';
 
-const handleChannelRemoved = (queryClient, channelId) => {
+const handleChannelRemoved = (queryClient, chatUiStore, channelId) => {
   removeChannelFromCache(queryClient, channelId);
 
-  const { currentChannelId, setCurrentChannelId } = useChatUiStore.getState();
+  const { currentChannelId, setCurrentChannelId } = chatUiStore.getState();
 
   if (String(currentChannelId) !== String(channelId)) {
     return;

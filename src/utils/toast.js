@@ -1,18 +1,16 @@
 import { notifications } from '@mantine/notifications';
 
-export const showErrorToast = (title, message, id) => {
+export const showErrorToast = (message, id) => {
   return notifications.show({
     id,
     color: 'red',
-    title,
     message,
   });
 };
 
-export const showSuccessToast = (title, message) => {
+export const showSuccessToast = (message) => {
   return notifications.show({
     color: 'green',
-    title,
     message,
   });
 };

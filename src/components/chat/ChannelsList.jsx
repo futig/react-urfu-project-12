@@ -22,7 +22,7 @@ const ChannelsList = ({
               component="button"
               type="button"
               label={<Text truncate="end" title={channelName}>{channelName}</Text>}
-              active={id === currentChannelId}
+              active={String(id) === String(currentChannelId)}
               onClick={() => onSelect(id)}
               flex={1}
               miw={0}
@@ -33,7 +33,7 @@ const ChannelsList = ({
                   <ActionIcon
                     type="button"
                     variant="subtle"
-                    aria-label={t(($) => $.channels.manage, { name })}
+                    aria-label={t(($) => $.channels.manage)}
                   >
                     <span aria-hidden="true">⋮</span>
                   </ActionIcon>

@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 
+import './index.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 

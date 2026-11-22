@@ -38,15 +38,11 @@ const AddChannelModal = ({ opened, onClose }) => {
     onSuccess: (channel) => {
       upsertChannelInCache(queryClient, channel);
       setCurrentChannelId(channel.id);
-      showSuccessToast(
-        t(($) => $.notifications.successTitle),
-        t(($) => $.notifications.channelCreated, { name: channel.name }),
-      );
+      showSuccessToast(t(($) => $.notifications.channelCreated));
       onClose();
     },
     onError: (error) => {
       showErrorToast(
-        t(($) => $.notifications.errorTitle),
         error instanceof TypeError
           ? t(($) => $.errors.network)
           : t(($) => $.notifications.channelCreateError),
@@ -63,6 +59,7 @@ const AddChannelModal = ({ opened, onClose }) => {
       opened={opened}
       onClose={onClose}
       title={t(($) => $.modals.add.title)}
+      closeButtonProps={{ 'aria-label': t(($) => $.common.close) }}
       centered
       closeOnClickOutside={!mutation.isPending}
       closeOnEscape={!mutation.isPending}
