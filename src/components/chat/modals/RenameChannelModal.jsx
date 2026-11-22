@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { renameChannel } from '../../../api/chat.js';
 import useAuthStore from '../../../store/authStore.js';
 import validateChannelName from '../../../utils/channelValidation.js';
+import cleanText from '../../../utils/profanity.js';
 import { CHANNELS_QUERY_KEY, upsertChannelInCache } from '../../../utils/queryCache.js';
 import { showErrorToast, showSuccessToast } from '../../../utils/toast.js';
 
@@ -51,7 +52,7 @@ const RenameChannelModal = ({ channel, opened, onClose }) => {
   });
 
   const handleSubmit = ({ name }) => {
-    mutation.mutate(name.trim());
+    mutation.mutate(cleanText(name.trim()));
   };
 
   return (

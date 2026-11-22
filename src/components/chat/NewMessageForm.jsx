@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { createMessage } from '../../api/chat.js';
 import useAuthStore from '../../store/authStore.js';
 import useChatUiStore from '../../store/chatUiStore.js';
+import cleanText from '../../utils/profanity.js';
 import { addMessageToCache } from '../../utils/queryCache.js';
 import { showErrorToast } from '../../utils/toast.js';
 
@@ -48,7 +49,7 @@ const NewMessageForm = () => {
       return;
     }
 
-    mutation.mutate(body.trim());
+    mutation.mutate(cleanText(body.trim()));
   };
 
   return (

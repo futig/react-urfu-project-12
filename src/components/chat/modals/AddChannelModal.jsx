@@ -15,6 +15,7 @@ import { createChannel } from '../../../api/chat.js';
 import useAuthStore from '../../../store/authStore.js';
 import useChatUiStore from '../../../store/chatUiStore.js';
 import validateChannelName from '../../../utils/channelValidation.js';
+import cleanText from '../../../utils/profanity.js';
 import { CHANNELS_QUERY_KEY, upsertChannelInCache } from '../../../utils/queryCache.js';
 import { showErrorToast, showSuccessToast } from '../../../utils/toast.js';
 
@@ -54,7 +55,7 @@ const AddChannelModal = ({ opened, onClose }) => {
   });
 
   const handleSubmit = ({ name }) => {
-    mutation.mutate(name.trim());
+    mutation.mutate(cleanText(name.trim()));
   };
 
   return (

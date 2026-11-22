@@ -1,6 +1,8 @@
 import { Box, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
+import cleanText from '../../utils/profanity.js';
+
 const MessagesList = ({ messages }) => {
   const { t } = useTranslation();
 
@@ -15,7 +17,7 @@ const MessagesList = ({ messages }) => {
           <Text component="span" fw={700}>
             {username}:{' '}
           </Text>
-          <Text component="span">{body}</Text>
+          <Text component="span">{cleanText(body)}</Text>
         </Box>
       ))}
     </Stack>
