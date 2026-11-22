@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { deleteChannel } from '../../../api/chat.js';
 import useAuthStore from '../../../store/authStore.js';
 import handleChannelRemoved from '../../../utils/channelRemoval.js';
+import { showErrorToast, showSuccessToast } from '../../../utils/toast.js';
 
 const RemoveChannelModal = ({ channel, opened, onClose }) => {
   const token = useAuthStore((state) => state.token);
@@ -14,7 +15,19 @@ const RemoveChannelModal = ({ channel, opened, onClose }) => {
     mutationFn: () => deleteChannel(token, channel.id),
     onSuccess: ({ id }) => {
       handleChannelRemoved(queryClient, id);
+      showSuccessToast(
+        t(($) => $.notifications.successTitle),
+        t(($) => $.notifications.channelRemoved, { name: channel.name }),
+      );
       onClose();
+    },
+    onError: (error) => {
+      showErrorToast(
+        t(($) => $.notifications.errorTitle),
+        error instanceof TypeError
+          ? t(($) => $.errors.network)
+          : t(($) => $.notifications.channelRemoveError),
+      );
     },
   });
 

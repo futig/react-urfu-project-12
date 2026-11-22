@@ -1,4 +1,5 @@
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import AppLayout from './components/AppLayout.jsx';
@@ -9,9 +10,11 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 
 const App = () => (
   <MantineProvider>
+    <Notifications position="bottom-right" />
     <BrowserRouter>
       <Routes>
         <Route element={<AppLayout />}>

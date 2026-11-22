@@ -7,6 +7,7 @@ import { createMessage } from '../../api/chat.js';
 import useAuthStore from '../../store/authStore.js';
 import useChatUiStore from '../../store/chatUiStore.js';
 import { addMessageToCache } from '../../utils/queryCache.js';
+import { showErrorToast } from '../../utils/toast.js';
 
 const NewMessageForm = () => {
   const token = useAuthStore((state) => state.token);
@@ -31,6 +32,14 @@ const NewMessageForm = () => {
     onSuccess: (message) => {
       addMessageToCache(queryClient, message);
       form.reset();
+    },
+    onError: (error) => {
+      showErrorToast(
+        t(($) => $.notifications.errorTitle),
+        error instanceof TypeError
+          ? t(($) => $.errors.network)
+          : t(($) => $.notifications.messageSendError),
+      );
     },
   });
 

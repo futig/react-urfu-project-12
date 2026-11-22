@@ -12,6 +12,18 @@ const translation = {
     server: 'Ошибка сервера. Попробуйте ещё раз',
     network: 'Ошибка сети. Попробуйте ещё раз',
   },
+  notifications: {
+    errorTitle: 'Ошибка',
+    successTitle: 'Готово',
+    loadError: 'Не удалось загрузить данные. Проверьте подключение к сети и повторите попытку.',
+    channelCreated: 'Канал # {{name}} создан',
+    channelRenamed: 'Канал переименован в # {{name}}',
+    channelRemoved: 'Канал # {{name}} удалён',
+    channelCreateError: 'Не удалось создать канал. Попробуйте ещё раз.',
+    channelRenameError: 'Не удалось переименовать канал. Попробуйте ещё раз.',
+    channelRemoveError: 'Не удалось удалить канал. Попробуйте ещё раз.',
+    messageSendError: 'Не удалось отправить сообщение. Проверьте соединение и повторите попытку.',
+  },
   login: {
     title: 'Войти',
     usernamePlaceholder: 'Введите имя пользователя',

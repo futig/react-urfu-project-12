@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
 import useAuthStore from '../store/authStore.js';
+import { showErrorToast } from '../utils/toast.js';
 
 const LoginPage = () => {
   const [authError, setAuthError] = useState(null);
@@ -56,6 +57,7 @@ const LoginPage = () => {
       navigate('/', { replace: true });
     } catch {
       setAuthError('errors.network');
+      showErrorToast(t(($) => $.notifications.errorTitle), t(($) => $.errors.network));
     } finally {
       setIsSubmitting(false);
     }

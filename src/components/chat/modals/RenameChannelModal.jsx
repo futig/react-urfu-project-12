@@ -15,6 +15,7 @@ import { renameChannel } from '../../../api/chat.js';
 import useAuthStore from '../../../store/authStore.js';
 import validateChannelName from '../../../utils/channelValidation.js';
 import { CHANNELS_QUERY_KEY, upsertChannelInCache } from '../../../utils/queryCache.js';
+import { showErrorToast, showSuccessToast } from '../../../utils/toast.js';
 
 const RenameChannelModal = ({ channel, opened, onClose }) => {
   const token = useAuthStore((state) => state.token);
@@ -33,7 +34,19 @@ const RenameChannelModal = ({ channel, opened, onClose }) => {
     mutationFn: (name) => renameChannel(token, channel.id, name),
     onSuccess: (updatedChannel) => {
       upsertChannelInCache(queryClient, updatedChannel);
+      showSuccessToast(
+        t(($) => $.notifications.successTitle),
+        t(($) => $.notifications.channelRenamed, { name: updatedChannel.name }),
+      );
       onClose();
+    },
+    onError: (error) => {
+      showErrorToast(
+        t(($) => $.notifications.errorTitle),
+        error instanceof TypeError
+          ? t(($) => $.errors.network)
+          : t(($) => $.notifications.channelRenameError),
+      );
     },
   });
 

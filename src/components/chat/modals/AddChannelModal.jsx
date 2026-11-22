@@ -16,6 +16,7 @@ import useAuthStore from '../../../store/authStore.js';
 import useChatUiStore from '../../../store/chatUiStore.js';
 import validateChannelName from '../../../utils/channelValidation.js';
 import { CHANNELS_QUERY_KEY, upsertChannelInCache } from '../../../utils/queryCache.js';
+import { showErrorToast, showSuccessToast } from '../../../utils/toast.js';
 
 const AddChannelModal = ({ opened, onClose }) => {
   const token = useAuthStore((state) => state.token);
@@ -36,7 +37,19 @@ const AddChannelModal = ({ opened, onClose }) => {
     onSuccess: (channel) => {
       upsertChannelInCache(queryClient, channel);
       setCurrentChannelId(channel.id);
+      showSuccessToast(
+        t(($) => $.notifications.successTitle),
+        t(($) => $.notifications.channelCreated, { name: channel.name }),
+      );
       onClose();
+    },
+    onError: (error) => {
+      showErrorToast(
+        t(($) => $.notifications.errorTitle),
+        error instanceof TypeError
+          ? t(($) => $.errors.network)
+          : t(($) => $.notifications.channelCreateError),
+      );
     },
   });
 

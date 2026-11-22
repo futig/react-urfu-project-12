@@ -21,6 +21,7 @@ import NewMessageForm from '../components/chat/NewMessageForm.jsx';
 import useAuthStore from '../store/authStore.js';
 import useChatUiStore from '../store/chatUiStore.js';
 import { CHANNELS_QUERY_KEY, MESSAGES_QUERY_KEY } from '../utils/queryCache.js';
+import { showErrorToast } from '../utils/toast.js';
 
 const ChatPage = () => {
   const token = useAuthStore((state) => state.token);
@@ -50,6 +51,18 @@ const ChatPage = () => {
     }
   }, [channels, currentChannelId, setCurrentChannelId]);
 
+  const hasLoadError = channelsQuery.isError || messagesQuery.isError;
+
+  useEffect(() => {
+    if (hasLoadError) {
+      showErrorToast(
+        t(($) => $.notifications.errorTitle),
+        t(($) => $.notifications.loadError),
+        'chat-load-error',
+      );
+    }
+  }, [hasLoadError, t]);
+
   if (channelsQuery.isPending || messagesQuery.isPending) {
     return (
       <Center h="100%">
@@ -58,7 +71,7 @@ const ChatPage = () => {
     );
   }
 
-  if (channelsQuery.isError || messagesQuery.isError) {
+  if (hasLoadError) {
     return (
       <Center h="100%" p="md">
         <Alert color="red" title={t(($) => $.chat.loadErrorTitle)} maw={500}>
