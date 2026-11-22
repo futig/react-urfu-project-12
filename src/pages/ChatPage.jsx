@@ -50,7 +50,7 @@ const ChatPage = () => {
 
   if (channelsQuery.isPending || messagesQuery.isPending) {
     return (
-      <Center h="100vh">
+      <Center h="100%">
         <Loader aria-label="Загрузка чата" />
       </Center>
     );
@@ -58,7 +58,7 @@ const ChatPage = () => {
 
   if (channelsQuery.isError || messagesQuery.isError) {
     return (
-      <Center h="100vh" p="md">
+      <Center h="100%" p="md">
         <Alert color="red" title="Ошибка загрузки" maw={500}>
           Не удалось загрузить данные чата. Попробуйте обновить страницу.
         </Alert>
@@ -74,7 +74,7 @@ const ChatPage = () => {
 
   return (
     <>
-      <Group gap={0} align="stretch" wrap="nowrap" h="100vh">
+      <Group gap={0} align="stretch" wrap="nowrap" h="100%">
         <Paper component="aside" w={260} p="md" radius={0} withBorder>
           <Stack h="100%">
             <Group justify="space-between" wrap="nowrap">

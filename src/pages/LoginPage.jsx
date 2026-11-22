@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import {
   Alert,
+  Anchor,
   Button,
   Center,
   Paper,
   PasswordInput,
   Stack,
+  Text,
   TextInput,
   Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import useAuthStore from '../store/authStore.js';
 
@@ -58,7 +60,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Center mih="100vh" p="md">
+    <Center h="100%" p="md">
       <Paper
         component="form"
         onSubmit={form.onSubmit(handleSubmit)}
@@ -99,6 +101,12 @@ const LoginPage = () => {
           <Button type="submit" fullWidth loading={isSubmitting}>
             Войти
           </Button>
+          <Text ta="center" size="sm">
+            Нет аккаунта?{' '}
+            <Anchor component={Link} to="/signup">
+              Зарегистрироваться
+            </Anchor>
+          </Text>
         </Stack>
       </Paper>
     </Center>
