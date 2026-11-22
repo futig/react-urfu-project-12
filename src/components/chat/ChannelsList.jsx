@@ -21,7 +21,12 @@ const ChannelsList = ({
             <NavLink
               component="button"
               type="button"
-              label={<Text truncate="end" title={channelName}>{channelName}</Text>}
+              label={(
+                <Text truncate="end" title={channelName}>
+                  <span style={{ marginRight: 4 }}>#</span>
+                  {name}
+                </Text>
+              )}
               active={String(id) === String(currentChannelId)}
               onClick={() => onSelect(id)}
               flex={1}
