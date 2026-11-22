@@ -8,7 +8,7 @@ const MessagesList = ({ messages }) => {
   return (
     <Stack gap="sm">
       {messages.map(({ id, username, body }) => (
-        <Box key={id}>
+        <Box key={id} maw="100%" style={{ overflowWrap: 'anywhere' }}>
           <Text component="span" fw={700}>
             {username}:{' '}
           </Text>

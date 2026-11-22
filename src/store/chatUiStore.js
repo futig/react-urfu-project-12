@@ -4,7 +4,7 @@ const useChatUiStore = create((set) => ({
   currentChannelId: null,
   activeModal: null,
   setCurrentChannelId: (channelId) => set({ currentChannelId: channelId }),
-  openModal: (modal) => set({ activeModal: modal }),
+  openModal: (type, channel = null) => set({ activeModal: { type, channel } }),
   closeModal: () => set({ activeModal: null }),
 }));
 

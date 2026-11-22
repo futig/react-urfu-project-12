@@ -22,3 +22,15 @@ export const getMessages = (token) => request('/messages', token);
 export const createMessage = (token, message) => (
   request('/messages', token, { method: 'POST', body: message })
 );
+
+export const createChannel = (token, name) => (
+  request('/channels', token, { method: 'POST', body: { name } })
+);
+
+export const renameChannel = (token, channelId, name) => (
+  request(`/channels/${channelId}`, token, { method: 'PATCH', body: { name } })
+);
+
+export const deleteChannel = (token, channelId) => (
+  request(`/channels/${channelId}`, token, { method: 'DELETE' })
+);
