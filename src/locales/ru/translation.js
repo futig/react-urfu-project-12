@@ -11,6 +11,8 @@ const translation = {
   errors: {
     server: 'Ошибка сервера. Попробуйте ещё раз',
     network: 'Ошибка сети. Попробуйте ещё раз',
+    unexpectedTitle: 'Что-то пошло не так',
+    unexpected: 'Попробуйте обновить страницу. Информация об ошибке отправлена разработчикам.',
   },
   notifications: {
     errorTitle: 'Ошибка',

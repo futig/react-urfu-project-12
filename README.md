@@ -25,6 +25,16 @@ git clone https://github.com/futig/react-urfu-project-12.git
 cd react-urfu-project-12
 ```
 
+### Переменные окружения
+
+Для отправки ошибок в Bugsink создайте `.env.local` на основе `.env.example` и укажите DSN:
+
+```bash
+VITE_SENTRY_DSN=ваш-dsn
+```
+
+Файл `.env.local` не попадает в Git. На Render переменная `VITE_SENTRY_DSN` задаётся в настройках окружения сервиса.
+
 ## Использование
 
 <!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
