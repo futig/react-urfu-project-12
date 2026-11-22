@@ -2,6 +2,10 @@
 
 [![hexlet-check](https://github.com/futig/react-urfu-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/futig/react-urfu-project-12/actions)
 
+## Демо
+
+Приложение доступно по адресу: https://hexlet-chat-futig.onrender.com/
+
 Напишите real-time приложение на React, используя AJAX, REST, websockets, React (с хуками) + Zustand + TanStack Query + @mantine/form
 
 Учебный проект Хекслета: https://ru.hexlet.io/
