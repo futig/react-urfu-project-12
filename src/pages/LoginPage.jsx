@@ -12,6 +12,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
 import useAuthStore from '../store/authStore.js';
@@ -21,6 +22,7 @@ const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       username: '',
@@ -40,12 +42,12 @@ const LoginPage = () => {
       });
 
       if (response.status === 401) {
-        setAuthError('Неверные имя пользователя или пароль');
+        setAuthError('login.errors.invalid');
         return;
       }
 
       if (!response.ok) {
-        setAuthError('Ошибка сервера. Попробуйте ещё раз');
+        setAuthError('errors.server');
         return;
       }
 
@@ -53,7 +55,7 @@ const LoginPage = () => {
       login(userData);
       navigate('/', { replace: true });
     } catch {
-      setAuthError('Ошибка сети. Попробуйте ещё раз');
+      setAuthError('errors.network');
     } finally {
       setIsSubmitting(false);
     }
@@ -73,16 +75,16 @@ const LoginPage = () => {
       >
         <Stack>
           <Title order={1} ta="center">
-            Войти
+            {t(($) => $.login.title)}
           </Title>
           {authError && (
             <Alert color="red" variant="light" role="alert">
-              {authError}
+              {t(authError)}
             </Alert>
           )}
           <TextInput
-            label="Имя пользователя"
-            placeholder="Введите имя пользователя"
+            label={t(($) => $.common.username)}
+            placeholder={t(($) => $.login.usernamePlaceholder)}
             name="username"
             autoComplete="username"
             required
@@ -90,8 +92,8 @@ const LoginPage = () => {
             {...form.getInputProps('username')}
           />
           <PasswordInput
-            label="Пароль"
-            placeholder="Введите пароль"
+            label={t(($) => $.common.password)}
+            placeholder={t(($) => $.login.passwordPlaceholder)}
             name="password"
             autoComplete="current-password"
             required
@@ -99,12 +101,12 @@ const LoginPage = () => {
             {...form.getInputProps('password')}
           />
           <Button type="submit" fullWidth loading={isSubmitting}>
-            Войти
+            {t(($) => $.login.submit)}
           </Button>
           <Text ta="center" size="sm">
-            Нет аккаунта?{' '}
+            {t(($) => $.login.noAccount)}{' '}
             <Anchor component={Link} to="/signup">
-              Зарегистрироваться
+              {t(($) => $.login.signupLink)}
             </Anchor>
           </Text>
         </Stack>

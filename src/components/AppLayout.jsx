@@ -1,4 +1,5 @@
 import { Anchor, Box, Button, Group, Paper, Stack } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 import useAuthStore from '../store/authStore.js';
@@ -7,6 +8,7 @@ const AppLayout = () => {
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
@@ -24,11 +26,11 @@ const AppLayout = () => {
             fw={700}
             underline="hover"
           >
-            Hexlet Chat
+            {t(($) => $.header.title)}
           </Anchor>
           {token && (
             <Button variant="light" onClick={handleLogout}>
-              Выйти
+              {t(($) => $.header.logout)}
             </Button>
           )}
         </Group>

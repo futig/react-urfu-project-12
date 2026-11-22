@@ -1,8 +1,11 @@
 import { Box, Stack, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 const MessagesList = ({ messages }) => {
+  const { t } = useTranslation();
+
   if (messages.length === 0) {
-    return <Text c="dimmed">В этом канале пока нет сообщений</Text>;
+    return <Text c="dimmed">{t(($) => $.messages.empty)}</Text>;
   }
 
   return (

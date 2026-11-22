@@ -1,11 +1,10 @@
 import { hasLength } from '@mantine/form';
 
-const validateLength = hasLength(
-  { min: 3, max: 20 },
-  'Название канала должно содержать от 3 до 20 символов',
-);
-
-const validateChannelName = (channels, currentChannelId = null) => (value) => {
+const validateChannelName = (channels, t, currentChannelId = null) => (value) => {
+  const validateLength = hasLength(
+    { min: 3, max: 20 },
+    t(($) => $.validation.channelLength),
+  );
   const lengthError = validateLength(value);
 
   if (lengthError) {
@@ -18,7 +17,7 @@ const validateChannelName = (channels, currentChannelId = null) => (value) => {
     && name.trim().toLowerCase() === normalizedName
   ));
 
-  return nameExists ? 'Канал с таким именем уже существует' : null;
+  return nameExists ? t(($) => $.validation.channelExists) : null;
 };
 
 export default validateChannelName;

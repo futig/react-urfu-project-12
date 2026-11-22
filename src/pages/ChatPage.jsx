@@ -11,6 +11,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { getChannels, getMessages } from '../api/chat.js';
 import ChannelModals from '../components/chat/ChannelModals.jsx';
@@ -26,6 +27,7 @@ const ChatPage = () => {
   const currentChannelId = useChatUiStore((state) => state.currentChannelId);
   const setCurrentChannelId = useChatUiStore((state) => state.setCurrentChannelId);
   const openModal = useChatUiStore((state) => state.openModal);
+  const { t } = useTranslation();
   const channelsQuery = useQuery({
     queryKey: CHANNELS_QUERY_KEY,
     queryFn: () => getChannels(token),
@@ -51,7 +53,7 @@ const ChatPage = () => {
   if (channelsQuery.isPending || messagesQuery.isPending) {
     return (
       <Center h="100%">
-        <Loader aria-label="Загрузка чата" />
+        <Loader aria-label={t(($) => $.chat.loading)} />
       </Center>
     );
   }
@@ -59,8 +61,8 @@ const ChatPage = () => {
   if (channelsQuery.isError || messagesQuery.isError) {
     return (
       <Center h="100%" p="md">
-        <Alert color="red" title="Ошибка загрузки" maw={500}>
-          Не удалось загрузить данные чата. Попробуйте обновить страницу.
+        <Alert color="red" title={t(($) => $.chat.loadErrorTitle)} maw={500}>
+          {t(($) => $.chat.loadError)}
         </Alert>
       </Center>
     );
@@ -70,7 +72,9 @@ const ChatPage = () => {
   const currentMessages = currentChannel
     ? messages.filter(({ channelId }) => channelId === currentChannel.id)
     : [];
-  const currentChannelName = currentChannel ? `# ${currentChannel.name}` : 'Канал не выбран';
+  const currentChannelName = currentChannel
+    ? `# ${currentChannel.name}`
+    : t(($) => $.chat.noChannel);
 
   return (
     <>
@@ -78,11 +82,11 @@ const ChatPage = () => {
         <Paper component="aside" w={260} p="md" radius={0} withBorder>
           <Stack h="100%">
             <Group justify="space-between" wrap="nowrap">
-              <Title order={3}>Каналы</Title>
+              <Title order={3}>{t(($) => $.chat.channels)}</Title>
               <ActionIcon
                 type="button"
                 variant="light"
-                aria-label="Добавить канал"
+                aria-label={t(($) => $.chat.addChannel)}
                 onClick={() => openModal('add')}
               >
                 <span aria-hidden="true">+</span>

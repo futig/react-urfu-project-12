@@ -12,6 +12,7 @@ import {
   Title,
 } from '@mantine/core';
 import { hasLength, isNotEmpty, matchesField, useForm } from '@mantine/form';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
 import useAuthStore from '../store/authStore.js';
@@ -21,6 +22,7 @@ const SignupPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const { t } = useTranslation();
   const form = useForm({
     initialValues: {
       username: '',
@@ -31,12 +33,18 @@ const SignupPage = () => {
     validate: {
       username: hasLength(
         { min: 3, max: 20 },
-        'Имя пользователя должно содержать от 3 до 20 символов',
+        t(($) => $.signup.validation.usernameLength),
       ),
-      password: hasLength({ min: 6 }, 'Пароль должен содержать не менее 6 символов'),
+      password: hasLength(
+        { min: 6 },
+        t(($) => $.signup.validation.passwordLength),
+      ),
       confirmPassword: (value, values) => (
-        isNotEmpty('Подтвердите пароль')(value)
-        ?? matchesField('password', 'Пароли должны совпадать')(value, values)
+        isNotEmpty(t(($) => $.signup.validation.confirmRequired))(value)
+        ?? matchesField(
+          'password',
+          t(($) => $.signup.validation.passwordsMismatch),
+        )(value, values)
       ),
     },
   });
@@ -53,12 +61,12 @@ const SignupPage = () => {
       });
 
       if (response.status === 409) {
-        setSignupError('Пользователь с таким именем уже существует');
+        setSignupError('signup.errors.duplicate');
         return;
       }
 
       if (!response.ok) {
-        setSignupError('Ошибка сервера. Попробуйте ещё раз');
+        setSignupError('errors.server');
         return;
       }
 
@@ -66,7 +74,7 @@ const SignupPage = () => {
       login(userData);
       navigate('/', { replace: true });
     } catch {
-      setSignupError('Ошибка сети. Попробуйте ещё раз');
+      setSignupError('errors.network');
     } finally {
       setIsSubmitting(false);
     }
@@ -86,16 +94,16 @@ const SignupPage = () => {
       >
         <Stack>
           <Title order={1} ta="center">
-            Регистрация
+            {t(($) => $.signup.title)}
           </Title>
           {signupError && (
             <Alert color="red" variant="light" role="alert">
-              {signupError}
+              {t(signupError)}
             </Alert>
           )}
           <TextInput
-            label="Имя пользователя"
-            placeholder="От 3 до 20 символов"
+            label={t(($) => $.common.username)}
+            placeholder={t(($) => $.signup.usernamePlaceholder)}
             name="username"
             autoComplete="username"
             required
@@ -103,8 +111,8 @@ const SignupPage = () => {
             {...form.getInputProps('username')}
           />
           <PasswordInput
-            label="Пароль"
-            placeholder="Не менее 6 символов"
+            label={t(($) => $.common.password)}
+            placeholder={t(($) => $.signup.passwordPlaceholder)}
             name="password"
             autoComplete="new-password"
             required
@@ -112,8 +120,8 @@ const SignupPage = () => {
             {...form.getInputProps('password')}
           />
           <PasswordInput
-            label="Подтверждение пароля"
-            placeholder="Повторите пароль"
+            label={t(($) => $.signup.confirmLabel)}
+            placeholder={t(($) => $.signup.confirmPlaceholder)}
             name="confirmPassword"
             autoComplete="new-password"
             required
@@ -121,12 +129,12 @@ const SignupPage = () => {
             {...form.getInputProps('confirmPassword')}
           />
           <Button type="submit" fullWidth loading={isSubmitting}>
-            Зарегистрироваться
+            {t(($) => $.signup.submit)}
           </Button>
           <Text ta="center" size="sm">
-            Уже есть аккаунт?{' '}
+            {t(($) => $.signup.hasAccount)}{' '}
             <Anchor component={Link} to="/login">
-              Войти
+              {t(($) => $.signup.loginLink)}
             </Anchor>
           </Text>
         </Stack>

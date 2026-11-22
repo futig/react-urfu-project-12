@@ -9,6 +9,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { renameChannel } from '../../../api/chat.js';
 import useAuthStore from '../../../store/authStore.js';
@@ -18,13 +19,14 @@ import { CHANNELS_QUERY_KEY, upsertChannelInCache } from '../../../utils/queryCa
 const RenameChannelModal = ({ channel, opened, onClose }) => {
   const token = useAuthStore((state) => state.token);
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const channels = queryClient.getQueryData(CHANNELS_QUERY_KEY) ?? [];
   const form = useForm({
     initialValues: {
       name: channel.name,
     },
     validate: {
-      name: validateChannelName(channels, channel.id),
+      name: validateChannelName(channels, t, channel.id),
     },
   });
   const mutation = useMutation({
@@ -43,7 +45,7 @@ const RenameChannelModal = ({ channel, opened, onClose }) => {
     <Modal
       opened={opened}
       onClose={onClose}
-      title="Переименовать канал"
+      title={t(($) => $.modals.rename.title)}
       centered
       closeOnClickOutside={!mutation.isPending}
       closeOnEscape={!mutation.isPending}
@@ -53,22 +55,22 @@ const RenameChannelModal = ({ channel, opened, onClose }) => {
         <Stack>
           {mutation.isError && (
             <Alert color="red" variant="light" role="alert">
-              Не удалось переименовать канал. Попробуйте ещё раз.
+              {t(($) => $.modals.rename.error)}
             </Alert>
           )}
           <TextInput
             data-autofocus
-            label="Новое название канала"
+            label={t(($) => $.modals.rename.label)}
             name="name"
             disabled={mutation.isPending}
             {...form.getInputProps('name')}
           />
           <Group justify="flex-end">
             <Button type="button" variant="default" onClick={onClose} disabled={mutation.isPending}>
-              Отмена
+              {t(($) => $.common.cancel)}
             </Button>
             <Button type="submit" loading={mutation.isPending}>
-              Сохранить
+              {t(($) => $.modals.rename.submit)}
             </Button>
           </Group>
         </Stack>

@@ -9,6 +9,7 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { createChannel } from '../../../api/chat.js';
 import useAuthStore from '../../../store/authStore.js';
@@ -20,13 +21,14 @@ const AddChannelModal = ({ opened, onClose }) => {
   const token = useAuthStore((state) => state.token);
   const setCurrentChannelId = useChatUiStore((state) => state.setCurrentChannelId);
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const channels = queryClient.getQueryData(CHANNELS_QUERY_KEY) ?? [];
   const form = useForm({
     initialValues: {
       name: '',
     },
     validate: {
-      name: validateChannelName(channels),
+      name: validateChannelName(channels, t),
     },
   });
   const mutation = useMutation({
@@ -46,7 +48,7 @@ const AddChannelModal = ({ opened, onClose }) => {
     <Modal
       opened={opened}
       onClose={onClose}
-      title="Добавить канал"
+      title={t(($) => $.modals.add.title)}
       centered
       closeOnClickOutside={!mutation.isPending}
       closeOnEscape={!mutation.isPending}
@@ -56,23 +58,23 @@ const AddChannelModal = ({ opened, onClose }) => {
         <Stack>
           {mutation.isError && (
             <Alert color="red" variant="light" role="alert">
-              Не удалось добавить канал. Попробуйте ещё раз.
+              {t(($) => $.modals.add.error)}
             </Alert>
           )}
           <TextInput
             data-autofocus
-            label="Название канала"
-            placeholder="Например, frontend"
+            label={t(($) => $.modals.add.label)}
+            placeholder={t(($) => $.modals.add.placeholder)}
             name="name"
             disabled={mutation.isPending}
             {...form.getInputProps('name')}
           />
           <Group justify="flex-end">
             <Button type="button" variant="default" onClick={onClose} disabled={mutation.isPending}>
-              Отмена
+              {t(($) => $.common.cancel)}
             </Button>
             <Button type="submit" loading={mutation.isPending}>
-              Добавить
+              {t(($) => $.modals.add.submit)}
             </Button>
           </Group>
         </Stack>
